@@ -380,6 +380,11 @@ func (f *decompressor) nextBlock() {
 }
 
 func (f *decompressor) Read(b []byte) (int, error) {
+	defer func() {
+		if f.err == io.EOF {
+			f.err = nil
+		}
+	}()
 	for {
 		if len(f.toRead) > 0 {
 			n := copy(b, f.toRead)
